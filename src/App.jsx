@@ -332,7 +332,7 @@ function App() {
               <a className="button button-dark" href="#finder">Explore the concept <span aria-hidden="true">↗</span></a>
             </article>
             <article className="pricing-card">
-              <div><span className="pricing-tier-label">PLUS</span><h3>Plus Annual</h3><p className="pricing-description">Annual plan, normalized in the model for monthly comparison.</p></div>
+              <div><span className="pricing-tier-label">PLUS</span><h3>Plus Annual</h3><p className="pricing-description">One year of Plus.</p></div>
               <div className="pricing-price"><strong>$24</strong><span>/ year</span></div>
               <a className="button button-dark" href="#finder">Explore the concept <span aria-hidden="true">↗</span></a>
             </article>
