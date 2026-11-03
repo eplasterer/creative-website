@@ -140,6 +140,7 @@ function App() {
           <a href="#how">How it works</a>
           <a href="#finder">Try the demo</a>
           <a href="#about">Our idea</a>
+          <a href="#pricing">Pricing</a>
         </nav>
         <a className="header-cta" href="#finder">Find a pick <span aria-hidden="true">↗</span></a>
       </header>
@@ -153,6 +154,7 @@ function App() {
             <div className="hero-actions">
               <a className="button button-lime" href="#finder">Find your next watch <span aria-hidden="true">↓</span></a>
               <a className="text-link" href="#how">See how it works <span aria-hidden="true">→</span></a>
+              <a className="text-link" href="#pricing">See pricing <span aria-hidden="true">→</span></a>
             </div>
             <p className="hero-note">Made for solo nights, couples, friends, and the roommate group chat.</p>
           </div>
@@ -308,6 +310,32 @@ function App() {
             <article><span>01 / SOLO</span><h3>Just for you</h3><p>Skip the scroll when you know the mood but can’t land on a title.</p></article>
             <article><span>02 / TWO</span><h3>Date-night truce</h3><p>Blend two points of view into a handful of options you can agree on.</p></article>
             <article><span>03 / GROUP</span><h3>Roommate rotation</h3><p>Give the group chat a starting point everyone can react to.</p></article>
+          </div>
+        </section>
+
+        <section className="pricing-section section-wrap" id="pricing" aria-labelledby="pricing-title">
+          <div className="section-heading">
+            <p className="eyebrow">05 / PRICING</p>
+            <h2 id="pricing-title">Clear options for a <em>better night.</em></h2>
+            <p className="section-summary">Choose the plan that fits how you watch.</p>
+          </div>
+          <p className="pricing-note">ShowDecider is a concept. These planned prices are shown for reference; subscriptions and payments are not enabled.</p>
+          <div className="pricing-grid" aria-label="ShowDecider plans">
+            <article className="pricing-card">
+              <div><span className="pricing-tier-label">CORE</span><h3>Free Core</h3><p className="pricing-description">Basic mood, genre and streaming-service recommendations.</p></div>
+              <div className="pricing-price"><strong>$0</strong></div>
+              <a className="button button-dark" href="#finder">Try the concept <span aria-hidden="true">↗</span></a>
+            </article>
+            <article className="pricing-card">
+              <div><span className="pricing-tier-label">PLUS</span><h3>Plus Monthly</h3><p className="pricing-description">Optional premium recommendation and shared-choice features.</p></div>
+              <div className="pricing-price"><strong>$2.49</strong><span>/ month</span></div>
+              <a className="button button-dark" href="#finder">Explore the concept <span aria-hidden="true">↗</span></a>
+            </article>
+            <article className="pricing-card">
+              <div><span className="pricing-tier-label">PLUS</span><h3>Plus Annual</h3><p className="pricing-description">Annual plan, normalized in the model for monthly comparison.</p></div>
+              <div className="pricing-price"><strong>$24</strong><span>/ year</span></div>
+              <a className="button button-dark" href="#finder">Explore the concept <span aria-hidden="true">↗</span></a>
+            </article>
           </div>
         </section>
 
