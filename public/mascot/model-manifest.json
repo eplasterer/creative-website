@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0",
+  "projectName": "ShowDecider Thinking Cat",
+  "modelName": "ShowDecider cat",
+  "modelType": "stylized-mascot",
+  "confirmedAt": "2026-11-06T19:13:09.711Z",
+  "dimensions": {
+    "width": 3.637470411052247,
+    "height": 3.651938241818696,
+    "depth": 2.26,
+    "units": "cm"
+  },
+  "modelUnits": "meters",
+  "preferredCamera": {
+    "position": [
+      -0.0026613693076601897,
+      0.0007683706086573084,
+      0.06260050633322292
+    ],
+    "target": [
+      0,
+      0,
+      0
+    ]
+  },
+  "background": "#ebe9e3",
+  "lighting": "Soft studio",
+  "description": "A friendly cat with glasses, helping people decide what to watch through an optional chat.",
+  "files": {
+    "model": "model.glb",
+    "project": "project.json",
+    "preview": "preview.png",
+    "readme": "README.txt"
+  },
+  "checksum": {
+    "algorithm": "SHA-256",
+    "value": "96f2d78de3e07a30eb312bdd4b4899116ff19563a4c11411f7a03bf068f27066"
+  },
+  "hotspots": [
+    {
+      "name": "Optional chat helper",
+      "description": "Users can open the cat to describe what they want to watch."
+    }
+  ]
+}
