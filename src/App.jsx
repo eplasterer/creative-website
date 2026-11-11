@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
+import Mascot3D from './components/Mascot3D';
 
 const moodOptions = [
   { id: 'cozy', label: 'Cozy & easy', icon: '☼' },
@@ -75,6 +76,7 @@ function App() {
   const [groupMode, setGroupMode] = useState(false);
   const [groupMood, setGroupMood] = useState('laugh');
   const [picks, setPicks] = useState(null);
+  const [guideMessage, setGuideMessage] = useState('Hi! I can help you get started. Try a quick option, then adjust anything in your shortlist form.');
 
   useEffect(() => {
     document.title = 'ShowDecider | Less scrolling, more watching';
@@ -120,13 +122,29 @@ function App() {
     setPicks(shortlist);
     window.setTimeout(() => {
       const results = document.getElementById('results');
-      if (results) results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (results) results.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     }, 80);
   }
 
   function scrollToFinder() {
     const finder = document.getElementById('finder');
-    if (finder) finder.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (finder) finder.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  function handleGuidePrompt(prompt) {
+    if (prompt === 'cozy') {
+      setMood('cozy');
+      setGuideMessage('Cozy & easy is selected. Your genres, time, and streaming services stay as they are.');
+    } else if (prompt === 'quick') {
+      setWatchTime('45');
+      setGuideMessage('Quick pick is selected for under 45 minutes. You can still change the mood or any other answer.');
+    } else if (prompt === 'group') {
+      setGroupMode(true);
+      setGuideMessage('Group mode is on. Choose a second mood in the form, then I’ll help you narrow it down.');
+    } else if (prompt === 'shortlist') {
+      setGuideMessage('Here are four ideas based on your current answers. You can edit them and try again anytime.');
+      buildShortlist();
+    }
   }
 
   return (
@@ -159,6 +177,7 @@ function App() {
             <p className="hero-note">Made for solo nights, couples, friends, and the roommate group chat.</p>
           </div>
 
+          <div className="hero-guide"><Mascot3D /><details className="hero-sample"><summary>See an example shortlist <span aria-hidden="true">＋</span></summary>
           <div className="hero-visual" aria-label="Example ShowDecider shortlist preview">
             <div className="preview-topline"><span>TONIGHT’S SHORTLIST</span><span className="preview-live"><i /> CONCEPT PREVIEW</span></div>
             <div className="preview-content">
@@ -178,6 +197,7 @@ function App() {
             </div>
             <div className="preview-footer"><span>01 / 04</span><span>FOUR PICKS. ZERO ENDLESS SCROLLING.</span></div>
           </div>
+          </details></div>
         </section>
 
         <div className="signal-strip" aria-label="ShowDecider recommendation inputs">
@@ -213,72 +233,79 @@ function App() {
           <div className="finder-layout section-wrap">
             <div className="finder-intro">
               <p className="eyebrow eyebrow-light">02 / MAKE IT YOURS</p>
-              <h2 id="finder-title">What sounds<br />good <em>tonight?</em></h2>
-              <p>Build a tiny watchlist around the way you feel, the time you have, and who’s watching with you.</p>
-              <div className="finder-side-note"><span>✦</span><p><strong>Designed to reduce choice overload.</strong><br />A focused shortlist keeps the decision moving without making the night feel like homework.</p></div>
+              <div className="finder-intro-content">
+                <h2 id="finder-title">What sounds<br />good <em>tonight?</em></h2>
+                <div className="finder-intro-copy">
+                  <p>Build a tiny watchlist around the way you feel, the time you have, and who’s watching with you.</p>
+                  <div className="finder-side-note"><span>✦</span><p><strong>Designed to reduce choice overload.</strong><br />A focused shortlist keeps the decision moving without making the night feel like homework.</p></div>
+                </div>
+              </div>
             </div>
 
-            <div className="finder-card">
-              <div className="finder-card-head"><div><span className="card-overline">SHOWDECIDER / INTERACTIVE CONCEPT</span><h3>Build your shortlist</h3></div><span className="card-step">4 QUICK INPUTS</span></div>
-
-              <div className="finder-field">
-                <div className="field-title"><span>01</span><div><h4>What’s the mood?</h4><p>Pick the feeling you want to leave with.</p></div></div>
-                <div className="choice-grid mood-choices">
-                  {moodOptions.map((option) => (
-                    <button key={option.id} type="button" className={'choice-button mood-choice' + (mood === option.id ? ' is-selected' : '')} aria-pressed={mood === option.id} onClick={() => setMood(option.id)}>
-                      <span className="choice-icon" aria-hidden="true">{option.icon}</span>{option.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="finder-field">
-                <div className="field-title"><span>02</span><div><h4>Any favorite genres?</h4><p>Choose one or a few. We’ll keep the list varied.</p></div></div>
-                <div className="chip-row">
-                  {genreOptions.map((genre) => (
-                    <button key={genre} type="button" className={'select-chip' + (genres.includes(genre) ? ' is-selected' : '')} aria-pressed={genres.includes(genre)} onClick={() => toggleChoice(genre, genres, setGenres)}>{genre}</button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="finder-columns">
+            <div className="finder-workspace">
+              <div className="finder-card">
+                <div className="finder-card-head"><div><span className="card-overline">SHOWDECIDER / INTERACTIVE CONCEPT</span><h3>Build your shortlist</h3></div><span className="card-step">4 QUICK INPUTS</span></div>
+  
                 <div className="finder-field">
-                  <div className="field-title"><span>03</span><div><h4>How much time?</h4><p>Choose your viewing window.</p></div></div>
-                  <div className="time-options">
-                    {timeOptions.map((option) => (
-                      <button key={option.id} type="button" className={'time-choice' + (watchTime === option.id ? ' is-selected' : '')} aria-pressed={watchTime === option.id} onClick={() => setWatchTime(option.id)}>
-                        <span className="time-radio" /><span><strong>{option.label}</strong><small>{option.detail}</small></span>
+                  <div className="field-title"><span>01</span><div><h4>What’s the mood?</h4><p>Pick the feeling you want to leave with.</p></div></div>
+                  <div className="choice-grid mood-choices">
+                    {moodOptions.map((option) => (
+                      <button key={option.id} type="button" className={'choice-button mood-choice' + (mood === option.id ? ' is-selected' : '')} aria-pressed={mood === option.id} onClick={() => setMood(option.id)}>
+                        <span className="choice-icon" aria-hidden="true">{option.icon}</span>{option.label}
                       </button>
                     ))}
                   </div>
                 </div>
+  
                 <div className="finder-field">
-                  <div className="field-title"><span>04</span><div><h4>Where do you watch?</h4><p>Pick services you already use.</p></div></div>
-                  <div className="chip-row service-chips">
-                    {serviceOptions.map((service) => (
-                      <button key={service} type="button" className={'select-chip' + (services.includes(service) ? ' is-selected' : '')} aria-pressed={services.includes(service)} onClick={() => toggleChoice(service, services, setServices)}>{service}</button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="group-picker">
-                <div className="group-picker-copy"><span className="group-icon" aria-hidden="true">◎</span><div><h4>Choosing with other people?</h4><p>Turn on group mode to add a second mood.</p></div></div>
-                <button type="button" role="switch" aria-checked={groupMode} className={'switch' + (groupMode ? ' is-on' : '')} onClick={() => setGroupMode(!groupMode)}><span className="switch-knob" /><span className="sr-only">Group mode</span></button>
-              </div>
-              {groupMode && (
-                <div className="group-mood-panel">
-                  <p className="group-mood-label">What is the group in the mood for?</p>
+                  <div className="field-title"><span>02</span><div><h4>Any favorite genres?</h4><p>Choose one or a few. We’ll keep the list varied.</p></div></div>
                   <div className="chip-row">
-                    {moodOptions.map((option) => (
-                      <button key={option.id} type="button" className={'select-chip' + (groupMood === option.id ? ' is-selected' : '')} aria-pressed={groupMood === option.id} onClick={() => setGroupMood(option.id)}>{option.label}</button>
+                    {genreOptions.map((genre) => (
+                      <button key={genre} type="button" className={'select-chip' + (genres.includes(genre) ? ' is-selected' : '')} aria-pressed={genres.includes(genre)} onClick={() => toggleChoice(genre, genres, setGenres)}>{genre}</button>
                     ))}
                   </div>
                 </div>
-              )}
-
-              <div className="finder-submit-row"><button type="button" className="button button-dark" onClick={buildShortlist}>Show me four picks <span aria-hidden="true">↗</span></button><span>YOUR ANSWERS, A SHORTER LIST</span></div>
-              <p className="concept-disclaimer">Concept preview: titles and service tags are illustrative. The site isn’t connected to live streaming catalogs.</p>
+  
+                <div className="finder-columns">
+                  <div className="finder-field">
+                    <div className="field-title"><span>03</span><div><h4>How much time?</h4><p>Choose your viewing window.</p></div></div>
+                    <div className="time-options">
+                      {timeOptions.map((option) => (
+                        <button key={option.id} type="button" className={'time-choice' + (watchTime === option.id ? ' is-selected' : '')} aria-pressed={watchTime === option.id} onClick={() => setWatchTime(option.id)}>
+                          <span className="time-radio" /><span><strong>{option.label}</strong><small>{option.detail}</small></span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="finder-field">
+                    <div className="field-title"><span>04</span><div><h4>Where do you watch?</h4><p>Pick services you already use.</p></div></div>
+                    <div className="chip-row service-chips">
+                      {serviceOptions.map((service) => (
+                        <button key={service} type="button" className={'select-chip' + (services.includes(service) ? ' is-selected' : '')} aria-pressed={services.includes(service)} onClick={() => toggleChoice(service, services, setServices)}>{service}</button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+  
+                <div className="group-picker">
+                  <div className="group-picker-copy"><span className="group-icon" aria-hidden="true">◎</span><div><h4>Choosing with other people?</h4><p>Turn on group mode to add a second mood.</p></div></div>
+                  <button type="button" role="switch" aria-checked={groupMode} className={'switch' + (groupMode ? ' is-on' : '')} onClick={() => setGroupMode(!groupMode)}><span className="switch-knob" /><span className="sr-only">Group mode</span></button>
+                </div>
+                {groupMode && (
+                  <div className="group-mood-panel">
+                    <p className="group-mood-label">What is the group in the mood for?</p>
+                    <div className="chip-row">
+                      {moodOptions.map((option) => (
+                        <button key={option.id} type="button" className={'select-chip' + (groupMood === option.id ? ' is-selected' : '')} aria-pressed={groupMood === option.id} onClick={() => setGroupMood(option.id)}>{option.label}</button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+  
+                <div className="finder-submit-row"><button type="button" className="button button-dark" onClick={buildShortlist}>Show me four picks <span aria-hidden="true">↗</span></button><span>YOUR ANSWERS, A SHORTER LIST</span></div>
+                <p className="concept-disclaimer">Concept preview: titles and service tags are illustrative. The site isn’t connected to live streaming catalogs.</p>
+              </div>
+              <WatchAssistant message={guideMessage} onPrompt={handleGuidePrompt} />
             </div>
           </div>
         </section>
@@ -344,6 +371,29 @@ function App() {
 
       <footer className="site-footer"><a className="brand footer-brand" href="#top" aria-label="ShowDecider back to top"><span className="brand-icon" aria-hidden="true">SD</span><span className="brand-name">Show<span>Decider</span></span></a><p>A movie & show recommendation concept.</p><span>© {new Date().getFullYear()} SHOWDECIDER · CONCEPT PREVIEW</span></footer>
     </div>
+  );
+}
+
+function WatchAssistant({ message, onPrompt }) {
+  return (
+    <aside className="assistant-card" aria-labelledby="assistant-title">
+      <div className="assistant-heading">
+        <span className="assistant-avatar-wrap"><img src={`${import.meta.env.BASE_URL}mascot/preview.png`} alt="" /></span>
+        <div>
+          <span className="assistant-overline">YOUR WATCH-NIGHT GUIDE</span>
+          <h3 id="assistant-title">Need a nudge?</h3>
+        </div>
+      </div>
+      <p className="assistant-message" role="status" aria-live="polite">{message}</p>
+      <p className="assistant-label">QUICK STARTS</p>
+      <div className="assistant-actions">
+        <button type="button" onClick={() => onPrompt('cozy')}>☼ <span>Make it cozy</span><b aria-hidden="true">↗</b></button>
+        <button type="button" onClick={() => onPrompt('quick')}>◷ <span>Find a quick watch</span><b aria-hidden="true">↗</b></button>
+        <button type="button" onClick={() => onPrompt('group')}>◎ <span>Plan a group watch</span><b aria-hidden="true">↗</b></button>
+      </div>
+      <button className="assistant-submit" type="button" onClick={() => onPrompt('shortlist')}>Show me four picks <span aria-hidden="true">↗</span></button>
+      <p className="assistant-footnote">Demo guide · updates the answers in your form</p>
+    </aside>
   );
 }
 
